@@ -34,12 +34,13 @@ pipeline {
                 echo 'Stage 3: Pushing Docker image to Docker Hub...'
                 script {
                     withCredentials([usernamePassword(
-                        credentialsId: 'gscomp334-dockerhub-token', // ← Updated ID here
+                        credentialsId: 'gscomp334-dockerhub-token',
                         usernameVariable: 'DOCKER_USERNAME',
                         passwordVariable: 'DOCKER_TOKEN'
                     )]) {
-                        sh """
-                            docker login -u '${DOCKER_USERNAME}' -p '${DOCKER_TOKEN}' ${env.DOCKER_REGISTRY}
+                        // Use bat for Windows instead of sh
+                        bat """
+                            echo %DOCKER_TOKEN% | docker login -u %DOCKER_USERNAME% --password-stdin
                             docker push ${env.DOCKER_IMAGE}:latest
                             docker logout ${env.DOCKER_REGISTRY}
                         """
