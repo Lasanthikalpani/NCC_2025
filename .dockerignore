@@ -1,0 +1,10 @@
+﻿.git
+.gitignore
+.env
+*.pyc
+__pycache__
+.DS_Store
+README.md
+HelloWorld.java
+backend2/
+frontend2/
