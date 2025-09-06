@@ -1,4 +1,4 @@
-﻿pipeline {
+pipeline {
     agent any
     
     environment {
@@ -22,7 +22,7 @@
             steps {
                 echo 'Stage 2: Building Docker image...'
                 script {
-                    docker.build(":latest")
+                    docker.build("${env.DOCKER_IMAGE}:latest")
                 }
                 echo '✅ Docker image built successfully'
             }
@@ -34,14 +34,14 @@
                 echo 'Stage 3: Pushing Docker image to Docker Hub...'
                 script {
                     withCredentials([usernamePassword(
-                        credentialsId: 'gscomp334-dockerhub-token',
+                        credentialsId: 'gscomp334-dockerhub-token', // ← Updated ID here
                         usernameVariable: 'DOCKER_USERNAME',
                         passwordVariable: 'DOCKER_TOKEN'
                     )]) {
                         sh """
-                            docker login -u '' -p '' 
-                            docker push :latest
-                            docker logout 
+                            docker login -u '${DOCKER_USERNAME}' -p '${DOCKER_TOKEN}' ${env.DOCKER_REGISTRY}
+                            docker push ${env.DOCKER_IMAGE}:latest
+                            docker logout ${env.DOCKER_REGISTRY}
                         """
                     }
                 }
